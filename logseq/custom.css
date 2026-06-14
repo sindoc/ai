@@ -1,0 +1,289 @@
+/* =============================================================================
+   Lutino Theme for Logseq
+   Based on the Lutino.io design system
+   Publishable as a Logseq community theme
+   ============================================================================= */
+
+/* ---------------------------------------------------------------------------
+   Design Tokens (Lutino palette)
+   --------------------------------------------------------------------------- */
+:root {
+  --lutino-coral:       #FF6C69;
+  --lutino-coral-dark:  #8B0000;
+  --lutino-coral-tint:  rgba(255, 108, 105, 0.15);
+  --lutino-canary:      #fff5ca;
+  --lutino-canary-tint: #fffae5;
+  --lutino-blurple:     #5522fa;
+  --lutino-teal:        #5ceace;
+  --lutino-stone:       #edeae6;
+  --lutino-stone-tint:  #f6f4f2;
+  --lutino-grey:        #777471;
+  --lutino-grey-light:  #FBFAF9;
+  --lutino-metal:       #d9d9d9;
+  --lutino-black:       #222222;
+  --lutino-white:       #ffffff;
+  --lutino-shadow:      rgba(0, 0, 0, 0.08);
+  --lutino-font:        "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --lutino-font-mono:   "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+}
+
+/* ---------------------------------------------------------------------------
+   Logseq Variable Overrides — light mode
+   --------------------------------------------------------------------------- */
+html[data-theme=light], .light-theme {
+  --ls-font-family:                    var(--lutino-font);
+  --ls-page-text-size:                 16px;
+  --ls-line-height-base:               1.65;
+  --ls-primary-background-color:       var(--lutino-white);
+  --ls-secondary-background-color:     var(--lutino-stone-tint);
+  --ls-tertiary-background-color:      var(--lutino-stone);
+  --ls-quaternary-background-color:    var(--lutino-metal);
+  --ls-table-tr-even-background-color: var(--lutino-canary-tint);
+  --ls-primary-text-color:             var(--lutino-black);
+  --ls-secondary-text-color:           var(--lutino-grey);
+  --ls-title-text-color:               var(--lutino-black);
+  --ls-link-text-color:                var(--lutino-coral);
+  --ls-link-ref-text-color:            var(--lutino-blurple);
+  --ls-external-link-color:            var(--lutino-blurple);
+  --ls-primary-color:                  var(--lutino-coral);
+  --ls-active-cursor-color:            var(--lutino-coral);
+  --ls-selection-color:                var(--lutino-coral-tint);
+  --ls-block-bullet-color:             var(--lutino-coral);
+  --ls-block-bullet-active-color:      var(--lutino-coral-dark);
+  --ls-menu-hover-color:               var(--lutino-coral-tint);
+  --ls-tag-text-color:                 var(--lutino-coral-dark);
+  --ls-border-color:                   var(--lutino-metal);
+  --ls-guideline-color:                var(--lutino-metal);
+}
+
+/* ---------------------------------------------------------------------------
+   Logseq Variable Overrides — dark mode
+   --------------------------------------------------------------------------- */
+html[data-theme=dark], .dark-theme {
+  --ls-font-family:                 var(--lutino-font);
+  --ls-page-text-size:              16px;
+  --ls-line-height-base:            1.65;
+  --ls-primary-background-color:    #1c1a18;
+  --ls-secondary-background-color:  #252320;
+  --ls-tertiary-background-color:   #2e2b28;
+  --ls-quaternary-background-color: #3a3733;
+  --ls-primary-text-color:          #f0ede8;
+  --ls-secondary-text-color:        #a09d99;
+  --ls-title-text-color:            #f0ede8;
+  --ls-link-text-color:             var(--lutino-coral);
+  --ls-link-ref-text-color:         var(--lutino-teal);
+  --ls-external-link-color:         var(--lutino-teal);
+  --ls-primary-color:               var(--lutino-coral);
+  --ls-active-cursor-color:         var(--lutino-coral);
+  --ls-selection-color:             var(--lutino-coral-tint);
+  --ls-block-bullet-color:          var(--lutino-coral);
+  --ls-block-bullet-active-color:   #ffa09e;
+  --ls-menu-hover-color:            rgba(255, 108, 105, 0.12);
+  --ls-tag-text-color:              var(--lutino-coral);
+  --ls-border-color:                #3a3733;
+  --ls-guideline-color:             #3a3733;
+}
+
+/* ---------------------------------------------------------------------------
+   Typography
+   --------------------------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+
+body, .page-content {
+  font-family:             var(--lutino-font);
+  font-variant-ligatures:  common-ligatures;
+  font-feature-settings:   "kern", "liga";
+}
+
+.page-title, h1.page-title {
+  font-family:    var(--lutino-font);
+  font-weight:    700;
+  font-size:      1.8em;
+  letter-spacing: -0.02em;
+  line-height:    1.15;
+  color:          var(--ls-title-text-color);
+  padding-bottom: 0.3em;
+  border-bottom:  2px solid var(--lutino-coral);
+  margin-bottom:  1em;
+}
+
+h1 { font-size: 1.5em;  font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 1.25em; font-weight: 700; letter-spacing: -0.01em; }
+h3 {
+  font-size:      1em;
+  font-weight:    700;
+  color:          var(--ls-secondary-text-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+code, pre, .code {
+  font-family: var(--lutino-font-mono);
+  font-size:   0.875em;
+}
+
+/* ---------------------------------------------------------------------------
+   Links & Page References
+   --------------------------------------------------------------------------- */
+a.page-ref {
+  color:           var(--ls-link-ref-text-color);
+  font-weight:     500;
+  border-bottom:   1px solid transparent;
+  text-decoration: none;
+  transition:      border-color 0.2s ease, color 0.2s ease;
+}
+a.page-ref:hover { border-bottom-color: var(--ls-link-ref-text-color); }
+
+a.external-link {
+  color:           var(--ls-external-link-color);
+  border-bottom:   1px dotted var(--ls-external-link-color);
+  text-decoration: none;
+  transition:      color 0.2s ease;
+}
+a.external-link:hover {
+  color:              var(--lutino-coral);
+  border-bottom-color: var(--lutino-coral);
+}
+
+/* ---------------------------------------------------------------------------
+   Tags
+   --------------------------------------------------------------------------- */
+a.tag {
+  font-size:        0.8em;
+  background-color: var(--lutino-coral-tint);
+  color:            var(--lutino-coral-dark);
+  border-radius:    4px;
+  padding:          1px 6px;
+  font-weight:      600;
+  letter-spacing:   0.03em;
+  transition:       background 0.2s ease;
+}
+a.tag:hover {
+  background-color: var(--lutino-coral);
+  color:            var(--lutino-white);
+}
+
+/* ---------------------------------------------------------------------------
+   Bullets & Blocks
+   --------------------------------------------------------------------------- */
+.bullet-container .bullet {
+  background-color: var(--lutino-coral);
+  opacity:  0.45;
+  transition: opacity 0.15s ease;
+}
+.bullet-container:hover .bullet,
+.bullet-container .bullet.active { opacity: 1; }
+
+.block-content { line-height: var(--ls-line-height-base, 1.65); }
+
+/* ---------------------------------------------------------------------------
+   Sidebar
+   --------------------------------------------------------------------------- */
+#left-sidebar {
+  background-color: var(--ls-secondary-background-color);
+  border-right: 1px solid var(--ls-border-color);
+}
+
+.left-sidebar-inner .nav-header {
+  font-weight:    700;
+  color:          var(--lutino-grey);
+  font-size:      0.68em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.favorites-section a.item:hover,
+.recent-section a.item:hover {
+  background-color: var(--lutino-coral-tint);
+  border-radius:    4px;
+}
+
+/* ---------------------------------------------------------------------------
+   Tables
+   --------------------------------------------------------------------------- */
+table { border-collapse: collapse; width: 100%; font-size: 0.9em; }
+
+th {
+  background-color: var(--lutino-stone);
+  font-weight:      700;
+  text-align:       left;
+  padding:          8px 12px;
+  border-bottom:    2px solid var(--lutino-coral);
+  color:            var(--lutino-black);
+}
+
+html[data-theme=dark] th {
+  background-color: var(--ls-tertiary-background-color);
+  color:            var(--ls-primary-text-color);
+}
+
+td { padding: 8px 12px; border-bottom: 1px solid var(--ls-border-color); }
+
+tr:nth-child(even) td  { background-color: var(--lutino-stone-tint); }
+html[data-theme=dark] tr:nth-child(even) td { background-color: var(--ls-secondary-background-color); }
+tr:hover td            { background-color: var(--lutino-coral-tint); }
+
+/* ---------------------------------------------------------------------------
+   Code Blocks
+   --------------------------------------------------------------------------- */
+.code-editor, pre.code {
+  background-color: var(--ls-tertiary-background-color);
+  border:           1px solid var(--ls-border-color);
+  border-left:      3px solid var(--lutino-coral);
+  border-radius:    4px;
+  padding:          1em 1.2em;
+  font-family:      var(--lutino-font-mono);
+  font-size:        0.875em;
+  overflow-x:       auto;
+}
+
+/* ---------------------------------------------------------------------------
+   Block References & Embeds
+   --------------------------------------------------------------------------- */
+.block-ref {
+  background-color: var(--lutino-canary-tint);
+  border-radius:    3px;
+  padding:          0 3px;
+  border-bottom:    1px solid var(--lutino-canary);
+}
+
+.embed-block {
+  border-left:      2px solid var(--lutino-coral);
+  padding-left:     1em;
+  margin:           0.5em 0;
+  background-color: var(--ls-secondary-background-color);
+  border-radius:    0 4px 4px 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Priority Labels
+   --------------------------------------------------------------------------- */
+a.priority {
+  font-size:     0.72em;
+  font-weight:   700;
+  background:    var(--lutino-coral-tint);
+  color:         var(--lutino-coral-dark);
+  padding:       1px 5px;
+  line-height:   1em;
+  border-radius: 4px;
+  border:        1px solid var(--lutino-coral);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ---------------------------------------------------------------------------
+   Search
+   --------------------------------------------------------------------------- */
+#search-field:focus, .search-input:focus {
+  outline:    none;
+  border-color: var(--lutino-coral);
+  box-shadow: 0 0 0 3px var(--lutino-coral-tint);
+}
+
+/* ---------------------------------------------------------------------------
+   Scrollbars
+   --------------------------------------------------------------------------- */
+::-webkit-scrollbar            { width: 6px; height: 6px; }
+::-webkit-scrollbar-track      { background: transparent; }
+::-webkit-scrollbar-thumb      { background: var(--lutino-metal); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover{ background: var(--lutino-coral); }
