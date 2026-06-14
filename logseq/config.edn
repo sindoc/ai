@@ -1,0 +1,28 @@
+{:meta/version 1
+
+ :preferred-workflow :todo
+
+ :file/name-format :triple-lowbar
+
+ :default-home {:page "AI Life"}
+
+ :publishing/all-pages-public? true
+
+ :feature/enable-flashcards? false
+
+ :ui/enable-tooltip? true
+
+ :feature/enable-search-remove-accents? true
+
+ :block/content-max-length 10000
+
+ :property-pages/enabled? true
+
+ :favorites ["AI Life" "Scenario" "AI Governance" "Data & AI Governance" "Human-AI Relationships Glossary" "Asset Codes" "Collibra Operating Model"]
+
+ :ref/default-open-blocks-level 2
+ :ref/linked-references-collapsed-threshold 50
+
+ :query/result-transforms
+ {:sort-by-priority
+  (fn [result] (sort-by (fn [h] (get h :block/priority "Z")) result))}}

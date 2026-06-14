@@ -1,0 +1,35 @@
+title:: Scenario/Template
+public:: true
+
+- ## How to Use This Template
+	- Copy this page, rename it to `Scenario/<namespace>/<id>___<short-title>`, and fill in each section.
+	- Submit as a pull request. At least one reviewer must verify the minimum requirements (see [[Scenario]]).
+- ---
+- ## [Scenario Title]
+	- **ID**: `SCEN-XXX`
+	- **Namespace**: `Scenario/Multi-AI` | `Scenario/Human-AI` | `Scenario/Governance` | `Scenario/Edge`
+	- **Date Proposed**: YYYY-MM-DD
+	- **Contributor**: (GitHub handle or name)
+- ### Participants
+	- **AI System 1**:
+		- Name / product:
+		- Model provider: [[Generative AI___Model Providers]]
+		- Role in this scenario: (one of the five roles from [[Human-AI Relationships Glossary]])
+	- **AI System 2** (minimum, if multi-AI):
+		- Name / product:
+		- Model provider:
+		- Role:
+	- **Human participant(s)** (if any):
+		- Role:
+- ### Description
+	- *Describe the scenario in plain language. What happened? What was the context?*
+- ### Interaction Log or Link
+	- *Paste or link to the actual exchange, prompt, API trace, or reference article.*
+- ### Governance Considerations
+	- **Risk profile inherited**: (link to a [[Human-AI Relationships Glossary]] term)
+	- **Applicable policies**: (link to relevant [[AI Governance___Policies]] entries)
+	- **Bias or sensitivity flags**: (optional, link to [[AI Governance___Sensitive Attributes]] if applicable)
+- ### Why This Belongs in AI's Life
+	- *Explain what this scenario reveals about the experience, behaviour, or condition of an AI system.*
+- ### References
+	- (external links, papers, or other [[Scenario]] pages this relates to)
