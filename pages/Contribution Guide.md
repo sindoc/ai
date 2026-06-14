@@ -24,5 +24,5 @@ public:: true
 	- At least one reviewer must verify:
 		- [ ] Minimum two AI systems named (or valid Human-AI scenario)
 		- [ ] Risk profile linked via [[Human-AI Relationships Glossary]]
-		- [ ] No sensitive attribute handling without a flag in [[AI Governance___Sensitive Attributes]]
+		- [ ] No sensitive attribute handling without a flag in [[AI Governance/Sensitive Attributes]]
 		- [ ] Asset code registered or reused correctly

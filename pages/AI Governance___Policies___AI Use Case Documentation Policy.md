@@ -1,3 +1,4 @@
+title:: AI Governance/Policies/AI Use Case Documentation Policy
 asset-code:: PLCY-001
 public:: true
 
@@ -16,5 +17,5 @@ public:: true
 	- Linking a scenario to the correct glossary term automatically inherits the risk tier.
 	- High-risk scenarios require additional governance review before merging.
 - ## See Also
-	- [[AI Governance___Policies___AI Monitoring Policy]]
+	- [[AI Governance/Policies/AI Monitoring Policy]]
 	- [[KnowYourAI]]

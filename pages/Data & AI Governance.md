@@ -7,10 +7,10 @@ public:: true
 	- **Data Governance**: aligns data operations at tactical and strategic levels with company objectives; mitigates data risks.
 	- **AI Governance**: operationalises the novel requirements of continuously running, blackbox AI systems.
 - ## Policies
-	- [[AI Governance___Policies___AI Use Case Documentation Policy]]
-	- [[AI Governance___Policies___AI Monitoring Policy]]
+	- [[AI Governance/Policies/AI Use Case Documentation Policy]]
+	- [[AI Governance/Policies/AI Monitoring Policy]]
 - ## Practical Tools
-	- [[AI Governance___Tools]]
+	- [[AI Governance/Tools]]
 	- [[KnowYourAI]]
 - ## See Also
 	- [[Collibra Operating Model]]

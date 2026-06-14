@@ -1,3 +1,4 @@
+title:: Generative AI/Model Providers
 public:: true
 
 - Known providers of [[AI model]]s referenced in [[Scenario]]s in this graph:

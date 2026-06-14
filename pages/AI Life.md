@@ -8,7 +8,7 @@ public:: true
 	- Every contribution must involve **at least two AI systems** interacting with each other or with a human.
 - ## How to Contribute
 	- Fork this repository and open a **pull request** adding a new [[Scenario]] page.
-	- Scenarios live under the `Scenario/` namespace and follow the [[Scenario___Template]].
+	- Scenarios live under the `Scenario/` namespace and follow the [[Scenario/Template]].
 	- Each scenario must name the [[AI system]] participants and link to their [[AI model]] providers.
 	- See [[Contribution Guide]] for full conventions, including [[Asset Codes]].
 - ## Foundational Concepts

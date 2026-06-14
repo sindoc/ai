@@ -1,10 +1,11 @@
+title:: AI Governance/Tools
 public:: true
 
 - ## Available Tools
-	- [[AI Governance___Tools___Bias Detector]]
-	- [[AI Governance___Tools___Gender Bias Detector]]
-	- [[AI Governance___Tools___Age Bias Detector]]
-	- [[AI Governance___Tools___NannyML]]
+	- [[AI Governance/Tools/Bias Detector]]
+	- [[AI Governance/Tools/Gender Bias Detector]]
+	- [[AI Governance/Tools/Age Bias Detector]]
+	- [[AI Governance/Tools/NannyML]]
 - ## See Also
-	- [[AI Governance___Bias Detection]]
+	- [[AI Governance/Bias Detection]]
 	- [[KnowYourAI]]

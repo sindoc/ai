@@ -6,5 +6,5 @@ public:: true
 - LLMs are the underlying model type for most conversational [[AI system]]s.
 - ## See Also
 	- [[AI model]]
-	- [[Generative AI___Model Providers]]
-	- [[AI Governance___Tools___NannyML]]
+	- [[Generative AI/Model Providers]]
+	- [[AI Governance/Tools/NannyML]]

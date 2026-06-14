@@ -16,5 +16,5 @@ public:: true
 	- Collibra-importable CSV available via [[SilkPage]]
 - ## See Also
 	- [[KnowYourAI]]
-	- [[AI Governance___Policies___AI Use Case Documentation Policy]]
-	- [[AI Governance___Sensitive Attributes]]
+	- [[AI Governance/Policies/AI Use Case Documentation Policy]]
+	- [[AI Governance/Sensitive Attributes]]

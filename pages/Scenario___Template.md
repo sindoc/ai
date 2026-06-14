@@ -13,7 +13,7 @@ public:: true
 - ### Participants
 	- **AI System 1**:
 		- Name / product:
-		- Model provider: [[Generative AI___Model Providers]]
+		- Model provider: [[Generative AI/Model Providers]]
 		- Role in this scenario: (one of the five roles from [[Human-AI Relationships Glossary]])
 	- **AI System 2** (minimum, if multi-AI):
 		- Name / product:
@@ -27,8 +27,8 @@ public:: true
 	- *Paste or link to the actual exchange, prompt, API trace, or reference article.*
 - ### Governance Considerations
 	- **Risk profile inherited**: (link to a [[Human-AI Relationships Glossary]] term)
-	- **Applicable policies**: (link to relevant [[AI Governance___Policies]] entries)
-	- **Bias or sensitivity flags**: (optional, link to [[AI Governance___Sensitive Attributes]] if applicable)
+	- **Applicable policies**: (link to relevant [[AI Governance/Policies]] entries)
+	- **Bias or sensitivity flags**: (optional, link to [[AI Governance/Sensitive Attributes]] if applicable)
 - ### Why This Belongs in AI's Life
 	- *Explain what this scenario reveals about the experience, behaviour, or condition of an AI system.*
 - ### References

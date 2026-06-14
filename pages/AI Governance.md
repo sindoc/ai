@@ -9,11 +9,11 @@ public:: true
 	- ### Blackbox nature of AI systems
 		- AI responses are not directly designed by humans — the model's internal structure is opaque.
 - ## Sub-topics
-	- [[AI Governance___Policies]]
-	- [[AI Governance___Sensitive Attributes]]
-	- [[AI Governance___Bias Detection]]
-	- [[AI Governance___Test]]
-	- [[AI Governance___Tools]]
+	- [[AI Governance/Policies]]
+	- [[AI Governance/Sensitive Attributes]]
+	- [[AI Governance/Bias Detection]]
+	- [[AI Governance/Test]]
+	- [[AI Governance/Tools]]
 - ## See Also
 	- [[Data & AI Governance]]
 	- [[KnowYourAI]]

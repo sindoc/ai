@@ -19,8 +19,8 @@ public:: true
 	- *(To be filled by a contributor with a real log or citation.)*
 - ### Governance Considerations
 	- **Risk profile inherited**: [[AI as an Assistant (Collaborative AI)]] → medium risk
-	- **Applicable policies**: [[AI Governance___Policies___AI Use Case Documentation Policy]]
-	- **Bias or sensitivity flags**: Political and policy bias; see [[AI Governance___Sensitive Attributes]]
+	- **Applicable policies**: [[AI Governance/Policies/AI Use Case Documentation Policy]]
+	- **Bias or sensitivity flags**: Political and policy bias; see [[AI Governance/Sensitive Attributes]]
 - ### Why This Belongs in AI's Life
 	- Even without direct communication between the two AI systems, this scenario explores whether two AIs, each shaped by different training data and RLHF, converge or diverge on governance questions — a window into the "opinions" embedded in their weights.
 - ### References
