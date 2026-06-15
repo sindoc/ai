@@ -136,6 +136,14 @@ gh pr create --title "feat: ..." --body "..."
 git submodule update --init --recursive
 ```
 
+### Pulling framework updates (forks)
+
+```bash
+git submodule update --remote knowyourai/main/knowyourai-framework
+```
+
+The `knowyourai-framework` submodule is intentionally a live channel: updates pushed to `sindoc/knowyourai-framework` flow to any fork that runs the above command. This is the intended distribution model — forks subscribe to the framework by keeping the submodule pointer up to date.
+
 ## Opening in Logseq
 
 Point Logseq at `~/ws/ai` as a new graph. The configured home page is **AI Life**. Logseq must be used (not just a text editor) to validate that page links resolve and the graph renders correctly before merging a PR.
