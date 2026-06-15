@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AI Life — Scenario Lifecycle Process
+  BPMN 2.0 XML (ISO 19510:2013)
+
+  Models the full lifecycle of a community scenario from PR submission through
+  governance review, enrichment, Collibra registration, and publication.
+
+  Swimlanes:
+    - Contributor       (external pool)
+    - Pipeline          (Go orchestrator + Python validator)
+    - Governance Review (human + Collibra)
+    - Publication       (SilkPage + Logseq)
+-->
+<definitions
+  xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  id="ai-scenario-lifecycle"
+  name="AI Life Scenario Lifecycle"
+  targetNamespace="urn:ai-knowledge-graph:bpmn:scenario-lifecycle"
+  expressionLanguage="http://www.w3.org/1999/XPath"
+  typeLanguage="http://www.w3.org/2001/XMLSchema">
+
+  <!-- ══════════════════════════════════════════════════════════════
+       COLLABORATION
+       ══════════════════════════════════════════════════════════════ -->
+  <collaboration id="collab-scenario-lifecycle">
+    <participant id="pool-contributor"  name="Contributor"       processRef="proc-contributor"/>
+    <participant id="pool-pipeline"     name="Pipeline"          processRef="proc-pipeline"/>
+    <participant id="pool-governance"   name="Governance Review" processRef="proc-governance"/>
+    <participant id="pool-publication"  name="Publication"       processRef="proc-publication"/>
+
+    <messageFlow id="mf-pr-submitted"      sourceRef="task-open-pr"         targetRef="start-pr-received"/>
+    <messageFlow id="mf-validation-result" sourceRef="task-validate"        targetRef="task-await-result"/>
+    <messageFlow id="mf-approved"          sourceRef="task-approve"         targetRef="task-publish"/>
+    <messageFlow id="mf-rejected"          sourceRef="task-reject"          targetRef="task-revise"/>
+  </collaboration>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       POOL: CONTRIBUTOR
+       ══════════════════════════════════════════════════════════════ -->
+  <process id="proc-contributor" name="Contributor" isExecutable="false">
+    <startEvent id="start-contributor" name="Scenario idea formed">
+      <outgoing>flow-c1</outgoing>
+    </startEvent>
+    <task id="task-draft-scenario" name="Draft scenario page&#10;(Scenario/Template)">
+      <incoming>flow-c1</incoming>
+      <outgoing>flow-c2</outgoing>
+    </task>
+    <task id="task-open-pr" name="Open pull request&#10;on feat/scenario-NNN">
+      <incoming>flow-c2</incoming>
+      <outgoing>flow-c3</outgoing>
+    </task>
+    <task id="task-await-result" name="Await validation result">
+      <incoming>flow-c3</incoming>
+      <outgoing>flow-c4</outgoing>
+    </task>
+    <exclusiveGateway id="gw-outcome" name="Outcome?">
+      <incoming>flow-c4</incoming>
+      <outgoing>flow-c-approve</outgoing>
+      <outgoing>flow-c-reject</outgoing>
+    </exclusiveGateway>
+    <task id="task-revise" name="Revise scenario per feedback">
+      <incoming>flow-c-reject</incoming>
+      <outgoing>flow-c5</outgoing>
+    </task>
+    <endEvent id="end-contributor-done" name="Scenario published">
+      <incoming>flow-c-approve</incoming>
+    </endEvent>
+    <endEvent id="end-contributor-abandon" name="PR closed">
+      <incoming>flow-c5</incoming>
+    </endEvent>
+
+    <sequenceFlow id="flow-c1" sourceRef="start-contributor"  targetRef="task-draft-scenario"/>
+    <sequenceFlow id="flow-c2" sourceRef="task-draft-scenario" targetRef="task-open-pr"/>
+    <sequenceFlow id="flow-c3" sourceRef="task-open-pr"        targetRef="task-await-result"/>
+    <sequenceFlow id="flow-c4" sourceRef="task-await-result"   targetRef="gw-outcome"/>
+    <sequenceFlow id="flow-c-approve" sourceRef="gw-outcome"  targetRef="end-contributor-done">
+      <conditionExpression xsi:type="tFormalExpression">outcome == 'approved'</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow-c-reject" sourceRef="gw-outcome"   targetRef="task-revise">
+      <conditionExpression xsi:type="tFormalExpression">outcome == 'rejected'</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow-c5" sourceRef="task-revise"        targetRef="end-contributor-abandon"/>
+  </process>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       POOL: PIPELINE
+       ══════════════════════════════════════════════════════════════ -->
+  <process id="proc-pipeline" name="Pipeline" isExecutable="true">
+    <startEvent id="start-pr-received" name="PR received">
+      <outgoing>flow-p1</outgoing>
+      <messageEventDefinition messageRef="msg-pr-submitted"/>
+    </startEvent>
+
+    <serviceTask id="task-validate" name="Validate data contract&#10;(Python validator)">
+      <incoming>flow-p1</incoming>
+      <outgoing>flow-p2</outgoing>
+    </serviceTask>
+
+    <exclusiveGateway id="gw-valid" name="Contract valid?">
+      <incoming>flow-p2</incoming>
+      <outgoing>flow-p-valid</outgoing>
+      <outgoing>flow-p-invalid</outgoing>
+    </exclusiveGateway>
+
+    <serviceTask id="task-enrich-wikipedia" name="Enrich with Wikipedia&#10;(wikipedia_fetch.py)">
+      <incoming>flow-p-valid</incoming>
+      <outgoing>flow-p3</outgoing>
+    </serviceTask>
+
+    <serviceTask id="task-run-health-check" name="Run health_check.py&#10;(namespace lint)">
+      <incoming>flow-p3</incoming>
+      <outgoing>flow-p4</outgoing>
+    </serviceTask>
+
+    <exclusiveGateway id="gw-high-risk" name="High-risk role?">
+      <incoming>flow-p4</incoming>
+      <outgoing>flow-p-high-risk</outgoing>
+      <outgoing>flow-p-normal</outgoing>
+    </exclusiveGateway>
+
+    <task id="task-flag-governance" name="Flag for governance review">
+      <incoming>flow-p-high-risk</incoming>
+      <outgoing>flow-p5</outgoing>
+    </task>
+
+    <serviceTask id="task-register-collibra" name="Register asset in Collibra&#10;(collibra-workflow.xml)">
+      <incoming>flow-p-normal</incoming>
+      <incoming>flow-p5</incoming>
+      <outgoing>flow-p6</outgoing>
+    </serviceTask>
+
+    <endEvent id="end-pipeline-done" name="Handoff to Governance/Publication">
+      <incoming>flow-p6</incoming>
+    </endEvent>
+
+    <endEvent id="end-pipeline-invalid" name="PR rejected (contract invalid)">
+      <incoming>flow-p-invalid</incoming>
+    </endEvent>
+
+    <sequenceFlow id="flow-p1" sourceRef="start-pr-received"      targetRef="task-validate"/>
+    <sequenceFlow id="flow-p2" sourceRef="task-validate"           targetRef="gw-valid"/>
+    <sequenceFlow id="flow-p-valid"   sourceRef="gw-valid"         targetRef="task-enrich-wikipedia">
+      <conditionExpression xsi:type="tFormalExpression">valid == true</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow-p-invalid" sourceRef="gw-valid"         targetRef="end-pipeline-invalid">
+      <conditionExpression xsi:type="tFormalExpression">valid == false</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow-p3" sourceRef="task-enrich-wikipedia"   targetRef="task-run-health-check"/>
+    <sequenceFlow id="flow-p4" sourceRef="task-run-health-check"   targetRef="gw-high-risk"/>
+    <sequenceFlow id="flow-p-high-risk" sourceRef="gw-high-risk"   targetRef="task-flag-governance">
+      <conditionExpression xsi:type="tFormalExpression">riskTier == 'High' or riskTier == 'Critical'</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow-p-normal"  sourceRef="gw-high-risk"     targetRef="task-register-collibra">
+      <conditionExpression xsi:type="tFormalExpression">riskTier == 'Low' or riskTier == 'Medium'</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow-p5" sourceRef="task-flag-governance"    targetRef="task-register-collibra"/>
+    <sequenceFlow id="flow-p6" sourceRef="task-register-collibra"  targetRef="end-pipeline-done"/>
+  </process>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       POOL: GOVERNANCE REVIEW
+       ══════════════════════════════════════════════════════════════ -->
+  <process id="proc-governance" name="Governance Review" isExecutable="false">
+    <startEvent id="start-gov-flagged" name="High-risk scenario flagged">
+      <outgoing>flow-g1</outgoing>
+    </startEvent>
+    <userTask id="task-human-review" name="Human governance reviewer&#10;reviews scenario">
+      <incoming>flow-g1</incoming>
+      <outgoing>flow-g2</outgoing>
+    </userTask>
+    <exclusiveGateway id="gw-gov-decision" name="Decision?">
+      <incoming>flow-g2</incoming>
+      <outgoing>flow-g-approve</outgoing>
+      <outgoing>flow-g-reject</outgoing>
+    </exclusiveGateway>
+    <task id="task-approve" name="Approve + annotate Collibra asset">
+      <incoming>flow-g-approve</incoming>
+      <outgoing>flow-g3</outgoing>
+    </task>
+    <task id="task-reject" name="Reject + document rationale">
+      <incoming>flow-g-reject</incoming>
+      <outgoing>flow-g4</outgoing>
+    </task>
+    <endEvent id="end-gov-approved" name="Approved">
+      <incoming>flow-g3</incoming>
+    </endEvent>
+    <endEvent id="end-gov-rejected" name="Rejected">
+      <incoming>flow-g4</incoming>
+    </endEvent>
+
+    <sequenceFlow id="flow-g1" sourceRef="start-gov-flagged"  targetRef="task-human-review"/>
+    <sequenceFlow id="flow-g2" sourceRef="task-human-review"  targetRef="gw-gov-decision"/>
+    <sequenceFlow id="flow-g-approve" sourceRef="gw-gov-decision" targetRef="task-approve">
+      <conditionExpression xsi:type="tFormalExpression">decision == 'approve'</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow-g-reject" sourceRef="gw-gov-decision"  targetRef="task-reject">
+      <conditionExpression xsi:type="tFormalExpression">decision == 'reject'</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow-g3" sourceRef="task-approve" targetRef="end-gov-approved"/>
+    <sequenceFlow id="flow-g4" sourceRef="task-reject"  targetRef="end-gov-rejected"/>
+  </process>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       POOL: PUBLICATION
+       ══════════════════════════════════════════════════════════════ -->
+  <process id="proc-publication" name="Publication" isExecutable="true">
+    <startEvent id="start-pub" name="Approved scenario ready">
+      <outgoing>flow-pub1</outgoing>
+    </startEvent>
+    <serviceTask id="task-md2xml" name="Convert Logseq MD → DocBook XML&#10;(pipeline.py md2xml)">
+      <incoming>flow-pub1</incoming>
+      <outgoing>flow-pub2</outgoing>
+    </serviceTask>
+    <serviceTask id="task-silkpage-transform" name="Apply Lutino theme&#10;(SilkPage XSL → HTML)">
+      <incoming>flow-pub2</incoming>
+      <outgoing>flow-pub3</outgoing>
+    </serviceTask>
+    <task id="task-publish" name="Publish to website&#10;and update graph index">
+      <incoming>flow-pub3</incoming>
+      <outgoing>flow-pub4</outgoing>
+    </serviceTask>
+    <serviceTask id="task-observability" name="Emit publication event&#10;(observability.py)">
+      <incoming>flow-pub4</incoming>
+      <outgoing>flow-pub5</outgoing>
+    </serviceTask>
+    <endEvent id="end-pub-done" name="Scenario live">
+      <incoming>flow-pub5</incoming>
+    </endEvent>
+
+    <sequenceFlow id="flow-pub1" sourceRef="start-pub"                targetRef="task-md2xml"/>
+    <sequenceFlow id="flow-pub2" sourceRef="task-md2xml"              targetRef="task-silkpage-transform"/>
+    <sequenceFlow id="flow-pub3" sourceRef="task-silkpage-transform"  targetRef="task-publish"/>
+    <sequenceFlow id="flow-pub4" sourceRef="task-publish"             targetRef="task-observability"/>
+    <sequenceFlow id="flow-pub5" sourceRef="task-observability"       targetRef="end-pub-done"/>
+  </process>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MESSAGE DEFINITIONS
+       ══════════════════════════════════════════════════════════════ -->
+  <message id="msg-pr-submitted" name="PullRequestSubmitted"/>
+  <message id="msg-approved"     name="ScenarioApproved"/>
+  <message id="msg-rejected"     name="ScenarioRejected"/>
+
+</definitions>

@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ai-knowledge-graph:data-contract:scenario-submission:v1",
+  "title": "AI Life Scenario Submission Data Contract",
+  "description": "JSON Schema contract for a scenario pull-request submission. Validated by tools/scenario_validator.py and the Go pipeline orchestrator.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["asset_code", "namespace", "participants", "description", "date_proposed", "governance"],
+  "additionalProperties": false,
+  "properties": {
+    "asset_code": {
+      "type": "string",
+      "pattern": "^SCEN-[0-9]{3}$",
+      "description": "Unique scenario identifier from the Asset Code registry (e.g. SCEN-006)"
+    },
+    "namespace": {
+      "type": "string",
+      "enum": ["Scenario/Multi-AI", "Scenario/Human-AI", "Scenario/Governance", "Scenario/Edge"],
+      "description": "Which scenario namespace this submission belongs to"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 120,
+      "description": "Short human-readable title (appended to namespace path)"
+    },
+    "date_proposed": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO-8601 date the scenario was proposed (UTC)"
+    },
+    "contributor": {
+      "type": "string",
+      "description": "GitHub handle or name of the proposing contributor"
+    },
+    "participants": {
+      "type": "array",
+      "minItems": 2,
+      "description": "At least two participants — AI systems and/or humans",
+      "items": {
+        "type": "object",
+        "required": ["type", "role"],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["ai_system", "human"],
+            "description": "Whether this participant is an AI system or a human"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name or product identifier (e.g. 'Claude', 'GPT-4', 'senior radiologist')"
+          },
+          "model_provider": {
+            "type": "string",
+            "description": "For AI systems: the model provider page name (e.g. 'Anthropic', 'OpenAI')"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "AI as a Tool (Human-Controlled AI)",
+              "AI as an Assistant (Collaborative AI)",
+              "AI as an Augmenter (Human-AI Symbiosis)",
+              "AI as a Manager (AI-Led Decision Making)",
+              "AI as an Autonomous Agent (AI Independence)",
+              "human_principal",
+              "human_reviewer",
+              "human_subject"
+            ],
+            "description": "Role from the Human-AI Relationships Glossary or human role descriptor"
+          }
+        }
+      }
+    },
+    "description": {
+      "type": "string",
+      "minLength": 50,
+      "description": "Plain-language description of the scenario"
+    },
+    "interaction_log": {
+      "type": "string",
+      "description": "URL or inline log of the actual interaction (optional for seed examples)"
+    },
+    "governance": {
+      "type": "object",
+      "required": ["risk_profile", "applicable_policies"],
+      "additionalProperties": false,
+      "properties": {
+        "risk_profile": {
+          "type": "string",
+          "enum": ["Low", "Medium", "Medium-High", "High", "Critical"],
+          "description": "Inherited risk tier from the highest-risk participant role"
+        },
+        "applicable_policies": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "List of policy page references (e.g. 'AI Governance/Policies/AI Use Case Documentation Policy')"
+        },
+        "bias_flags": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Optional list of bias or sensitivity flags"
+        },
+        "high_risk_review_required": {
+          "type": "boolean",
+          "description": "Automatically true when risk_profile is High or Critical"
+        }
+      }
+    },
+    "why_ai_life": {
+      "type": "string",
+      "minLength": 30,
+      "description": "Explanation of what this scenario reveals about AI's experience or condition"
+    },
+    "references": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "List of related page references or external URLs"
+    }
+  },
+  "if": {
+    "properties": {
+      "governance": {
+        "properties": {
+          "risk_profile": {"enum": ["High", "Critical"]}
+        }
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "governance": {
+        "properties": {
+          "high_risk_review_required": {"const": true}
+        }
+      }
+    }
+  }
+}
