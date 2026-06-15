@@ -1,0 +1,126 @@
+{:blocks (
+{:block/created-at 1781442527062
+:block/properties 
+{:ls-type :whiteboard-shape
+:logseq.tldraw.shape 
+{:blockType "P"
+:stroke ""
+:collapsed false
+:borderRadius 8
+:index 0
+:scale [1 1]
+:pageId "SilkPage"
+:scaleLevel "xs"
+:fill ""
+:compact false
+:isAutoResizing true
+:type "logseq-portal"
+:size [200 289.3359375]
+:strokeType "line"
+:strokeWidth 2
+:opacity 1
+:id "17480b20-67f2-11f1-9d9b-a175337a8809"
+:noFill false
+:point [360 272]
+:parentId "6a2ea7ac-d4c4-4291-94ba-0dc2c1f50fec"
+:collapsedHeight 0
+:nonce 1781442489684}}
+:block/updated-at 1781442527062} 
+{:block/created-at 1781442564276
+:block/properties 
+{:ls-type :whiteboard-shape
+:logseq.tldraw.shape 
+{:blockType "P"
+:stroke ""
+:collapsed false
+:borderRadius 8
+:index 1
+:scale [1 1]
+:pageId "singine"
+:scaleLevel "xs"
+:fill ""
+:compact false
+:isAutoResizing true
+:type "logseq-portal"
+:size [200 310.984375]
+:strokeType "line"
+:strokeWidth 2
+:opacity 1
+:id "313d3f00-67f2-11f1-9d9b-a175337a8809"
+:noFill false
+:point [584 272]
+:parentId "6a2ea7ac-d4c4-4291-94ba-0dc2c1f50fec"
+:collapsedHeight 0
+:nonce 1781442533466}}
+:block/updated-at 1781442564276} 
+{:block/created-at 1781442668569
+:block/properties 
+{:ls-type :whiteboard-shape
+:logseq.tldraw.shape 
+{:blockType "P"
+:stroke ""
+:collapsed false
+:borderRadius 8
+:index 2
+:scale [1 1]
+:pageId "Collibra"
+:scaleLevel "xs"
+:fill ""
+:compact false
+:isAutoResizing true
+:type "logseq-portal"
+:size [200 393.1797252648082]
+:strokeType "line"
+:strokeWidth 2
+:opacity 1
+:id "474951d0-67f2-11f1-9d9b-a175337a8809"
+:noFill false
+:point [800 272]
+:parentId "6a2ea7ac-d4c4-4291-94ba-0dc2c1f50fec"
+:collapsedHeight 0
+:nonce 1781442570232}}
+:block/updated-at 1781442668569} 
+{:block/created-at 1781442700418
+:block/properties 
+{:ls-type :whiteboard-shape
+:logseq.tldraw.shape 
+{:blockType "P"
+:stroke ""
+:collapsed false
+:borderRadius 8
+:index 3
+:scale [1 1]
+:pageId "AI Governance/Tools"
+:scaleLevel "md"
+:fill ""
+:compact false
+:isAutoResizing true
+:type "logseq-portal"
+:size [400 486.2734375]
+:strokeType "line"
+:strokeWidth 2
+:opacity 1
+:id "896dd860-67f2-11f1-9d9b-a175337a8809"
+:noFill false
+:point [1424 360]
+:parentId "6a2ea7ac-d4c4-4291-94ba-0dc2c1f50fec"
+:collapsedHeight 0
+:nonce 1781442681065}}
+:block/updated-at 1781442700418})
+:pages (
+{:block/uuid #uuid "6a2ea7ac-d4c4-4291-94ba-0dc2c1f50fec"
+:block/properties 
+{:ls-type :whiteboard-page
+:logseq.tldraw.page 
+{:id "6a2ea7ac-d4c4-4291-94ba-0dc2c1f50fec"
+:name "static lineage 2026"
+:bindings 
+{}
+:nonce 1
+:assets []
+:shapes-index ("17480b20-67f2-11f1-9d9b-a175337a8809" "313d3f00-67f2-11f1-9d9b-a175337a8809" "474951d0-67f2-11f1-9d9b-a175337a8809" "896dd860-67f2-11f1-9d9b-a175337a8809")}}
+:block/updated-at 1781442716264
+:block/created-at 1781442476156
+:block/type "whiteboard"
+:block/name "virtual lineage 2026"
+:block/original-name "Virtual Lineage 2026"})}

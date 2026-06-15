@@ -1,0 +1,3 @@
+[submodule "knowyourai/main/knowyourai-framework"]
+	path = knowyourai/main/knowyourai-framework
+	url = https://github.com/sindoc/knowyourai-framework.git

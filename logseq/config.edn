@@ -25,4 +25,7 @@
 
  :query/result-transforms
  {:sort-by-priority
-  (fn [result] (sort-by (fn [h] (get h :block/priority "Z")) result))}}
+  (fn [result] (sort-by (fn [h] (get h :block/priority "Z")) result))}
+ :graph/forcesettings {:link-dist 180
+ :charge-strength -1000
+ :charge-range 3500}}

@@ -1,0 +1,7 @@
+# Logseq auto-generated (ephemeral)
+logseq/bak/
+logseq/.recycle/
+
+# macOS
+.DS_Store
+**/.DS_Store

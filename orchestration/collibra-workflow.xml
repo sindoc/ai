@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Collibra Executable Workflow: AI Life Scenario Registration
+
+  Purpose: Register a validated AI Life scenario as a Collibra asset and
+           route it through the requirements-agreement process. This workflow
+           wraps the technical pipeline as a Collibra-governed activity,
+           creating an audit trail of the agreement process.
+
+  Mapping to Collibra concepts:
+    - Asset type: Mapping Specification (SCEN extended type)
+    - Community: sindoc
+    - Domain: AI Life Scenarios (Mapping Specifications domain)
+    - Statuses: Candidate → Under Review → Accepted / Rejected
+
+  Integration: Called from pipeline.py after data-contract validation passes.
+  Outputs: Collibra asset UUID + audit log entry.
+-->
+<workflow-definition
+  xmlns="urn:collibra:workflow:v2"
+  xmlns:dcterms="http://purl.org/dc/terms/"
+  id="ai-life-scenario-registration"
+  name="AI Life Scenario Registration"
+  version="1.0.0">
+
+  <metadata>
+    <dcterms:creator>singine-platform-team</dcterms:creator>
+    <dcterms:created>2026-06-14</dcterms:created>
+    <dcterms:description>
+      Registers a validated AI Life scenario submission as a Collibra asset,
+      routes high-risk scenarios through a human governance review step,
+      and records the requirements agreement with full audit trail.
+    </dcterms:description>
+  </metadata>
+
+  <!-- ── Variables ─────────────────────────────────────────────── -->
+  <variables>
+    <variable name="assetCode"      type="string" required="true"/>
+    <variable name="scenarioTitle"  type="string" required="true"/>
+    <variable name="namespace"      type="string" required="true"/>
+    <variable name="riskTier"       type="string" required="true"/>
+    <variable name="submitterEmail" type="string" required="false"/>
+    <variable name="collibraAssetId" type="string" required="false"/>
+    <variable name="reviewDecision"  type="string" required="false" default="pending"/>
+    <variable name="reviewNotes"     type="string" required="false"/>
+    <variable name="auditEntries"    type="list"   required="false"/>
+  </variables>
+
+  <!-- ── Steps ─────────────────────────────────────────────────── -->
+  <steps>
+
+    <!-- Step 1: Create asset as Candidate -->
+    <service-step id="step-create-asset" name="Create Scenario Asset (Candidate)">
+      <description>Create the scenario as a Collibra asset with status Candidate.</description>
+      <service>collibra.asset.create</service>
+      <inputs>
+        <input name="name"       value="${scenarioTitle}"/>
+        <input name="assetType"  value="Mapping Specification"/>
+        <input name="community"  value="sindoc"/>
+        <input name="domain"     value="AI Life Scenarios"/>
+        <input name="status"     value="Candidate"/>
+        <input name="attributes">
+          <attribute name="asset-code"  value="${assetCode}"/>
+          <attribute name="namespace"   value="${namespace}"/>
+          <attribute name="risk-tier"   value="${riskTier}"/>
+          <attribute name="source-repo" value="urn:github:ai-knowledge-graph"/>
+        </input>
+      </inputs>
+      <outputs>
+        <output name="collibraAssetId" variable="collibraAssetId"/>
+      </outputs>
+      <on-success>
+        <audit message="Asset ${assetCode} created in Collibra as Candidate (id=${collibraAssetId})"/>
+        <next step="step-risk-gate"/>
+      </on-success>
+      <on-failure>
+        <audit message="Failed to create Collibra asset for ${assetCode}: ${error}"/>
+        <end status="error"/>
+      </on-failure>
+    </service-step>
+
+    <!-- Step 2: Risk gate — route High/Critical to human review -->
+    <decision-step id="step-risk-gate" name="Risk Tier Gate">
+      <description>High and Critical risk scenarios require human governance review before acceptance.</description>
+      <condition>
+        <when variable="riskTier" operator="in" value="High,Critical">
+          <next step="step-human-review"/>
+        </when>
+        <otherwise>
+          <next step="step-accept-asset"/>
+        </otherwise>
+      </condition>
+    </decision-step>
+
+    <!-- Step 3: Human review task (High/Critical only) -->
+    <user-step id="step-human-review" name="Governance Review">
+      <description>
+        A human governance reviewer must assess the scenario, document their
+        decision, and update the Collibra asset status accordingly.
+        This step creates the requirements agreement record.
+      </description>
+      <assignee-role>AI Governance Reviewer</assignee-role>
+      <form>
+        <field name="reviewDecision" type="enum" options="approve,reject,defer"
+               label="Decision" required="true"/>
+        <field name="reviewNotes"    type="text"
+               label="Rationale / conditions" required="true"/>
+      </form>
+      <on-submit>
+        <next step="step-route-decision"/>
+      </on-submit>
+      <sla-hours>48</sla-hours>
+      <on-sla-breach>
+        <audit message="SLA breach on governance review for ${assetCode} — escalating"/>
+        <next step="step-human-review" reassign-role="AI Governance Lead"/>
+      </on-sla-breach>
+    </user-step>
+
+    <!-- Step 4: Route on human decision -->
+    <decision-step id="step-route-decision" name="Route on Decision">
+      <condition>
+        <when variable="reviewDecision" operator="eq" value="approve">
+          <next step="step-accept-asset"/>
+        </when>
+        <when variable="reviewDecision" operator="eq" value="reject">
+          <next step="step-reject-asset"/>
+        </when>
+        <when variable="reviewDecision" operator="eq" value="defer">
+          <next step="step-human-review"/>
+        </when>
+      </condition>
+    </decision-step>
+
+    <!-- Step 5a: Accept -->
+    <service-step id="step-accept-asset" name="Accept Asset">
+      <service>collibra.asset.status.update</service>
+      <inputs>
+        <input name="assetId" value="${collibraAssetId}"/>
+        <input name="status"  value="Accepted"/>
+        <input name="comment" value="Scenario ${assetCode} accepted via AI Life pipeline."/>
+      </inputs>
+      <on-success>
+        <audit message="Asset ${assetCode} accepted (id=${collibraAssetId})"/>
+        <next step="step-notify-contributor-accepted"/>
+      </on-success>
+    </service-step>
+
+    <!-- Step 5b: Reject -->
+    <service-step id="step-reject-asset" name="Reject Asset">
+      <service>collibra.asset.status.update</service>
+      <inputs>
+        <input name="assetId" value="${collibraAssetId}"/>
+        <input name="status"  value="Rejected"/>
+        <input name="comment" value="${reviewNotes}"/>
+      </inputs>
+      <on-success>
+        <audit message="Asset ${assetCode} rejected: ${reviewNotes}"/>
+        <next step="step-notify-contributor-rejected"/>
+      </on-success>
+    </service-step>
+
+    <!-- Step 6a: Notify accepted -->
+    <service-step id="step-notify-contributor-accepted" name="Notify Contributor (Accepted)">
+      <service>notification.send</service>
+      <inputs>
+        <input name="to"      value="${submitterEmail}"/>
+        <input name="subject" value="[AI Life] Scenario ${assetCode} accepted"/>
+        <input name="body"    value="Your scenario '${scenarioTitle}' has been accepted and registered in Collibra (asset id: ${collibraAssetId}). It will be published to the knowledge graph shortly."/>
+      </inputs>
+      <on-success>
+        <end status="accepted"/>
+      </on-success>
+    </service-step>
+
+    <!-- Step 6b: Notify rejected -->
+    <service-step id="step-notify-contributor-rejected" name="Notify Contributor (Rejected)">
+      <service>notification.send</service>
+      <inputs>
+        <input name="to"      value="${submitterEmail}"/>
+        <input name="subject" value="[AI Life] Scenario ${assetCode} not accepted"/>
+        <input name="body"    value="Your scenario '${scenarioTitle}' was not accepted. Reviewer notes: ${reviewNotes}. You may revise and resubmit."/>
+      </inputs>
+      <on-success>
+        <end status="rejected"/>
+      </on-success>
+    </service-step>
+
+  </steps>
+
+</workflow-definition>
