@@ -106,6 +106,36 @@ Both tools are available locally. Use them when a contributor submits assets in 
 | `~/ws/ls/public/main/website` | Source public graph this repo was seeded from |
 | `~/ws/ls/kern` | Private Logseq graph (journals and private pages) |
 
+## Development Commands
+
+### First-time remote setup
+
+```bash
+# Create the GitHub repo (requires gh CLI)
+gh repo create sindoc/ai --public --source=. --remote=origin --push
+
+# Or manually: create at github.com/new, then:
+git remote add origin git@github.com:sindoc/ai.git
+git push -u origin main
+```
+
+### Contribute a branch + PR
+
+```bash
+git checkout -b feat/my-change
+# ... make changes ...
+git add pages/Scenario___My-New-Scenario.md
+git commit -m "feat: add SCEN-006 ..."
+git push -u origin feat/my-change
+gh pr create --title "feat: ..." --body "..."
+```
+
+### Submodule init (after cloning)
+
+```bash
+git submodule update --init --recursive
+```
+
 ## Opening in Logseq
 
 Point Logseq at `~/ws/ai` as a new graph. The configured home page is **AI Life**. Logseq must be used (not just a text editor) to validate that page links resolve and the graph renders correctly before merging a PR.
